@@ -1,6 +1,7 @@
 package com.example.stamprally;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import static com.example.stamprally.R.id.spinner;
  * Created by mb-347 on 2017/09/10.
  */
 
-public  class PlaceholderFragment extends  Fragment implements AdapterView.OnItemSelectedListener {
+public  class PlaceholderFragment extends  Fragment implements AdapterView.OnItemSelectedListener  {
 
     /**
      * The fragment argument representing the section number for this
@@ -85,8 +86,12 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
 
 
 
-        mAdapter = new MyAdapter(spots);
+        mAdapter = new MyAdapter(spots,this);
         mRecyclerView.setAdapter(mAdapter);
+
+
+
+
 
         //textView.setText("こんにちは"+number);
 
@@ -94,7 +99,18 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         return rootView;
     }
 
-    
+    public void changeActivity(int position){
+        Intent intent=new Intent();
+        intent.setClassName("com.example.stamprally","com.example.stamprally.SpotDetailActivity");
+        intent.putExtra("setuden.spotName", spots.get(position).spotName);
+        intent.putExtra("setuden.userName","村人A");
+        intent.putExtra("setuden.description",spots.get(position).description);
+
+        startActivity(intent);
+    }
+
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -114,9 +130,7 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
 
     }
 
-    public void initImage() {
 
-    }
 
     public ArrayList<Spot> initSpots() {//ここで、本来はスポットの情報をサーバから得る
         Random random = new Random();
@@ -145,4 +159,5 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         }
         return mspots;
     }
+
 }

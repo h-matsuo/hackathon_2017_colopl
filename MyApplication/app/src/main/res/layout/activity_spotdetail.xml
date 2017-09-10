@@ -9,7 +9,7 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/icon"
+        android:src="@drawable/icon"
         android:layout_marginRight="273dp"
         android:layout_marginEnd="273dp"
         android:layout_marginBottom="379dp"
@@ -21,27 +21,31 @@
         android:id="@+id/text_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="151dp"
-        android:text="TextView" />
+        android:textSize="25dp"
+        android:text="TextView"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/text_spotname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="55dp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginRight="120dp"
-        android:text="TextView" />
+        android:textSize="40dp"
+        android:text="TextView"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/text_description"
+        android:layout_alignStart="@+id/text_description"
+        android:layout_marginLeft="27dp"
+        android:layout_marginStart="27dp" />
 
     <TextView
         android:id="@+id/text_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignParentBottom="true"
+        android:textSize="25dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="TextView" />
+        android:layout_marginBottom="134dp" />
 </RelativeLayout>

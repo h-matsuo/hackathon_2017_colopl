@@ -28,3 +28,18 @@
     ```sh
     $ python3 run.py
     ```
+
+
+# Dump & Restore MongoDB Data
+
+以下のコマンドを実行すると，`<directory>` にデータがダンプされる：
+
+```sh
+$ mongodump -d hikyo -o <directory>
+```
+
+リストアするには以下の通り：
+
+```sh
+$ mongorestore -d hikyo <directory>
+```

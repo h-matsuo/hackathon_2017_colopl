@@ -2,6 +2,7 @@ package com.example.stamprally;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
@@ -110,8 +111,12 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter(spots);
+        mAdapter = new MyAdapter(spots,this);
         mRecyclerView.setAdapter(mAdapter);
+
+
+
+
 
         //textView.setText("こんにちは"+number);
 
@@ -119,7 +124,19 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         return rootView;
     }
 
-    
+    public void changeActivity(int position){
+        Intent intent=new Intent();
+        intent.setClassName("com.example.stamprally","com.example.stamprally.SpotDetailActivity");
+        intent.putExtra("setuden.spotName", spots.get(position).spotName);
+        intent.putExtra("setuden.userName","村人A");
+        intent.putExtra("setuden.images",spots.get(position).images);
+        intent.putExtra("setuden.description",spots.get(position).description);
+
+        startActivity(intent);
+    }
+
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -139,9 +156,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-    public void initImage() {
 
-    }
 
     public ArrayList<Spot> initSpots() {//ここで、本来はスポットの情報をサーバから得る
         Random random = new Random();

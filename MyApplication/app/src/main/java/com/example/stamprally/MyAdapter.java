@@ -1,6 +1,7 @@
 package com.example.stamprally;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static java.security.AccessController.getContext;
+
 
 /**
  * Created by mb-347 on 2017/09/10.
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
     ArrayList<String> mDataset;
     ArrayList<Spot>spots;
-
+    PlaceholderFragment placeholderFragment;
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,8 +39,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
     }
 
 
-    public MyAdapter(ArrayList<Spot>spots){
+    public MyAdapter(ArrayList<Spot>spots,PlaceholderFragment placeholderFragment){
         this.spots=spots;
+        this.placeholderFragment=placeholderFragment;
 
     }
     @Override
@@ -69,6 +73,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
             }
         });
         */
+
+        final int pos=position;
+        holder.mImageView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {//ここでスポットのクリック判定を行う
+                Log.d("clicked",pos+" "+spots.get(pos).spotName);
+                placeholderFragment.changeActivity(pos);
+            }
+        });
 
     }
 

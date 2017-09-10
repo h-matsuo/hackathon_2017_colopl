@@ -8,6 +8,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import static java.security.AccessController.getContext;
  */
 
 public class MyAdapter2     extends RecyclerView.Adapter<MyAdapter2.ItemViewHolder>{
+    public Placeholder2Fragment placeholder2Fragment;
     ArrayList<StampCard> stampCards;
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -45,8 +47,9 @@ public class MyAdapter2     extends RecyclerView.Adapter<MyAdapter2.ItemViewHold
         }
     }
 
-    public MyAdapter2(ArrayList<StampCard>stampCards){
+    public MyAdapter2(ArrayList<StampCard>stampCards,Placeholder2Fragment placeholder2Fragment){
         this.stampCards=stampCards;
+        this.placeholder2Fragment=placeholder2Fragment;
 
     }
 
@@ -73,6 +76,16 @@ public class MyAdapter2     extends RecyclerView.Adapter<MyAdapter2.ItemViewHold
 
         holder.mImageView[i].setImageResource(stampCards.get(position).cardId[i]);
         }
+
+
+        final int pos=position;
+        holder.mTextView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {//ここでスポットのクリック判定を行う
+                Log.d("clicked",pos+" "+stampCards.get(pos).cardName);
+                placeholder2Fragment.changeActivity(pos);
+            }
+        });
 
     }
 

@@ -94,6 +94,8 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         return rootView;
     }
 
+    
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         TextView tv;

@@ -58,7 +58,7 @@ def format_spot_data(spot):
   formatted = {
     'spot_id'    : spot['spot_id'],
     'spot_name'  : spot['spot_name'],
-    'user_id'    : 1,
+    'user_id'    : spot['user_id'],
     'image_urls' : image_urls,
     'latitude'   : spot['latitude'],
     'longitude'  : spot['longitude'],
@@ -69,6 +69,27 @@ def format_spot_data(spot):
     'favorites'  : spot['favorites'],
     'created'    : spot['created'],
     'modified'   : spot['modified']
+  }
+  return formatted
+
+
+def format_card_data(card):
+  spot_ids = card['spot_ids']
+  spots = []
+  for spot_id in spot_ids:
+    spot = db_get_spot(spot_id)
+    spots.append(format_spot_data(spot))
+  formatted = {
+    'card_id'    : card['card_id'],
+    'card_name'  : card['card_name'],
+    'user_id'    : card['user_id'],
+    'spots'      : spots,
+    'prefectures': card['prefectures'],
+    'cities'     : card['cities'],
+    'description': card['description'],
+    'difficulty' : card['difficulty'],
+    'created'    : card['created'],
+    'modified'   : card['modified']
   }
   return formatted
 
@@ -153,6 +174,30 @@ def db_get_image(image_id):
   if result.count() > 0:
     image_data = result[0]['data']
   return image_data
+
+
+def db_get_card_id_list(prefecture=None, city=None):
+  query = {}
+  if prefecture:
+    query['prefectures'] = prefecture
+  if city:
+    query['cities'] = city
+  result = db.card.find(query)
+  card_ids = []
+  for card in result:
+    card_ids.append(card['card_id'])
+  return card_ids
+
+
+def db_get_card(card_id):
+  query = {
+    'card_id': card_id
+  }
+  result = db.card.find(query)
+  card = None
+  if result.count() > 0:
+    card = result[0]
+  return card
 
 
 @app.route('/')
@@ -272,12 +317,32 @@ def api_spot_post():
   return make_response({'spot_id': spot_id})
 
 
+@app.route('/api/card/list/id', methods=['GET'])
+def api_card_list_id():
+  req = flask.request
+  prefecture = req.args.get('prefecture')
+  city       = req.args.get('city')
+  card_ids = db_get_card_id_list(prefecture, city)
+  result = {
+    'card_ids': card_ids
+  }
+  return make_response(result)
+
+
 @app.route('/api/card/list', methods=['GET'])
 def api_card_list():
   req = flask.request
   prefecture = req.args.get('prefecture')
   city       = req.args.get('city')
-  pass
+  card_ids  = db_get_card_id_list(prefecture, city)
+  cards = []
+  for card_id in card_ids:
+    card = db_get_card(card_id)
+    cards.append(format_card_data(card))
+  result = {
+    'cards': cards
+  }
+  return make_response(result)
 
 
 @app.route('/api/card', methods=['GET'])
@@ -286,6 +351,11 @@ def api_card():
   card_id = req.args.get('card_id')
   if card_id == None:
     flask.abort(400)
+  card = db_get_card(int(card_id))
+  if card == None:
+    flask.abort(404)
+  result = format_card_data(card)
+  return make_response(result)
 
 
 @app.route('/api/user', methods=['GET'])

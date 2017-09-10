@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return PlaceholderFragment.newInstance(0);
                 case 1:
-                    return Placeholder2Fragment.newInstance(0);
+                    return Placeholder2Fragment.newInstance(1);
                 case 2:
                     return Placeholder3Fragment.newInstance(0);
             }

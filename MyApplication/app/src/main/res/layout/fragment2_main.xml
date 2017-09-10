@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fragment2_main" />
-</LinearLayout>
+        android:entries="@array/array_prefecture"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="14dp" />
+    <Spinner
+        android:id="@+id/spinner4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/array_city"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/spinner3"
+        android:layout_alignLeft="@+id/spinner3"
+        android:layout_alignStart="@+id/spinner3"
+        android:layout_alignRight="@+id/spinner3"
+        android:layout_alignEnd="@+id/spinner3" />
+    <Spinner
+        android:id="@+id/spinner5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/array_difficult"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/spinner4"
+        android:layout_alignLeft="@+id/spinner4"
+        android:layout_alignStart="@+id/spinner4"
+        android:layout_alignRight="@+id/spinner4"
+        android:layout_alignEnd="@+id/spinner4" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_marginTop="73dp"
+        android:layout_below="@+id/spinner5"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

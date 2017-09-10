@@ -50,6 +50,8 @@ public class PlaceholderFragment extends Fragment implements LocationListener {
     Button button;
     Button btnUpImg;
     Button btnPostSpot;
+    Button btnPressStamp;
+    Button btnPostSpotGPS;
 
     View rootView;
     Thread thread;
@@ -58,6 +60,8 @@ public class PlaceholderFragment extends Fragment implements LocationListener {
     ProgressDialog postingDialog;
 
     Location location;
+    // tmp!
+    Location registerLocation;
 
     int REQUEST_CHOOSER = 1000;
     Uri m_uri;
@@ -96,6 +100,8 @@ public class PlaceholderFragment extends Fragment implements LocationListener {
         button = (Button)rootView.findViewById(R.id.btn1);
         btnUpImg = (Button)rootView.findViewById(R.id.btn_up_img);
         btnPostSpot = (Button)rootView.findViewById(R.id.btn_post_spot);
+        btnPressStamp = (Button)rootView.findViewById(R.id.btn_press_stamp);
+        btnPostSpotGPS = (Button)rootView.findViewById(R.id.btn_post_spot_gps);
 
         /* ローディングダイアログ */
         loadingDialog = new ProgressDialog(getActivity());
@@ -312,13 +318,108 @@ public class PlaceholderFragment extends Fragment implements LocationListener {
                 });
             }
         });
+        btnPressStamp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // registerLocation = location;
+                StringEntity entity = null;
+                try {
+                    // entity = new StringEntity(jsonParams.toString(),"UTF-8");
+                    // textView.setText(convertImageStr);
+                } catch (Exception e) {
+
+                }
+
+//                loadingDialog.hide();
+//                loadingDialog.setMessage("Posting...");
+//                loadingDialog.show();
+
+//                AsyncHttpClient client = new AsyncHttpClient();
+//                client.addHeader("Content-Type", "application/json");
+//                client.post(getContext(), "http://1ffd1c85.ngrok.io/api/spot/post", entity, "application/json",new AsyncHttpResponseHandler() {
+//                    // client.post("172.31.30.52:1323", params, new AsyncHttpResponseHandler() {
+//
+//                    @Override
+//                    public void onStart() {
+//                        // called before request is started
+//                        loadingDialog.show();
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+//                        // called when response HTTP status is "200 OK"
+//                        String str = "";
+//                        Toast.makeText(getActivity(), "OK!", Toast.LENGTH_SHORT).show();
+//                        loadingDialog.hide();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+//                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+//                        Toast.makeText(getActivity(), "FAIL!", Toast.LENGTH_SHORT).show();
+//                        loadingDialog.hide();
+//                    }
+//                });
+            }
+        });
+        btnPostSpotGPS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerLocation = location;
+                Toast.makeText(getActivity(), "OK!", Toast.LENGTH_SHORT).show();
+//                StringEntity entity = null;
+//                try {
+//                    // entity = new StringEntity(jsonParams.toString(),"UTF-8");
+//                    // textView.setText(convertImageStr);
+//                } catch (Exception e) {
+//
+//                }
+
+//                loadingDialog.hide();
+//                loadingDialog.setMessage("Posting...");
+//                loadingDialog.show();
+
+//                AsyncHttpClient client = new AsyncHttpClient();
+//                client.addHeader("Content-Type", "application/json");
+//                client.post(getContext(), "http://1ffd1c85.ngrok.io/api/spot/post", entity, "application/json",new AsyncHttpResponseHandler() {
+//                    // client.post("172.31.30.52:1323", params, new AsyncHttpResponseHandler() {
+//
+//                    @Override
+//                    public void onStart() {
+//                        // called before request is started
+//                        loadingDialog.show();
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+//                        // called when response HTTP status is "200 OK"
+//                        String str = "";
+//                        Toast.makeText(getActivity(), "OK!", Toast.LENGTH_SHORT).show();
+//                        loadingDialog.hide();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+//                        // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+//                        Toast.makeText(getActivity(), "FAIL!", Toast.LENGTH_SHORT).show();
+//                        loadingDialog.hide();
+//                    }
+//                });
+            }
+        });
     }
 
     //位置情報が通知されるたびにコールバックされるメソッド
     @Override
     public void onLocationChanged(Location location){
+        this.location = location;
+        if (location == null || registerLocation == null) {
+            return;
+        }
         TextView textView = (TextView) rootView.findViewById(R.id.location);
-        textView.setText(String.valueOf("onLocationChanged() : " + location.getLatitude()) + ":" + String.valueOf(location.getLongitude()));
+        textView.setText(String.valueOf("now : " + location.getLatitude()) + ":" + String.valueOf(location.getLongitude()) + "\n" +
+                String.valueOf("reg : " + registerLocation.getLatitude()) + ":" + String.valueOf(registerLocation.getLongitude()) + "\n" +
+                String.valueOf("destance : " + getDistance(location, registerLocation)));
     }
 
     //ロケーションプロバイダが利用不可能になるとコールバックされるメソッド
@@ -369,5 +470,19 @@ public class PlaceholderFragment extends Fragment implements LocationListener {
             ImageView imageView = (ImageView)rootView.findViewById(R.id.img_view);
             imageView.setImageURI(resultUri);
         }
+    }
+
+    /*
+     * 2点間の距離（メートル）、方位角（始点、終点）を取得
+     * ※配列で返す[距離、始点から見た方位角、終点から見た方位角]
+     */
+    public float getDistance(Location l1, Location l2) {
+        // 結果を格納するための配列を生成
+        float[] results = new float[3];
+
+        // 距離計算
+        Location.distanceBetween(l1.getLatitude(), l1.getLongitude(), l2.getLatitude(), l2.getLongitude(), results);
+
+        return results[0];
     }
 }

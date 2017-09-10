@@ -9,22 +9,23 @@ import android.graphics.Bitmap;
 public class Spot {
     String spotName;
     int userId;
-    int images[];
-    double lattitude;
-    double longtitude;
+    //int images[];
+    String imageUrl; // 配列は後回し
+    double latitude;
+    double longitude;
     String prefecture;
     String city;
     String description;
     String hint;
     int favorites;
 
-    public Spot(String spotName,int images[],String description) {
-
-        {
-            this.spotName = spotName;
-            this.images = images;
-            this.description = description;
-        }
-    }
+//    public Spot(String spotName,int images[],String description) {
+//
+//        {
+//            this.spotName = spotName;
+//            this.images = images;
+//            this.description = description;
+//        }
+//    }
 
 }

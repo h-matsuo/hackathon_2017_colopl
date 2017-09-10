@@ -1,7 +1,9 @@
 package com.example.stamprally;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
@@ -11,21 +13,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Random;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.StringTokenizer;
+
+import cz.msebera.android.httpclient.Header;
+
+import static android.R.attr.button;
 import static com.example.stamprally.R.id.spinner;
 
 /**
  * Created by mb-347 on 2017/09/10.
  */
 
-public  class PlaceholderFragment extends  Fragment implements AdapterView.OnItemSelectedListener {
+public  class PlaceholderFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     /**
      * The fragment argument representing the section number for this
@@ -39,6 +55,8 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
     private ArrayList<Spot> spots;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
+
+    ProgressDialog loadingDialog;
 
     public PlaceholderFragment() {
 
@@ -67,13 +85,22 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         TextView textView = (TextView) rootView.findViewById(R.id.textView1);
         int number = getArguments().getInt(ARG_SECTION_NUMBER);
 
-        initImage();//画像を表示する前に、読み込みを行う
-        spots=new ArrayList<Spot>();
-        spots = initSpots();
+        /* ローディングダイアログ */
+        loadingDialog = new ProgressDialog(getActivity());
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loadingDialog.setMessage("Loading...");
+        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
+        initImage();//画像を表示する前に、読み込みを行う
+        spots = new ArrayList<Spot>();
+        spots = initSpots();
 
         spinner_prefecture = (Spinner) rootView.findViewById(R.id.spinner);
         spinner_city = (Spinner) rootView.findViewById(R.id.spinner2);
+
+        ArrayList<String> spinnerPrefecture = getExistPrefecture();
+        //Toast.makeText(getActivity(), spinnerPrefecture.get(0), Toast.LENGTH_SHORT).show();
+        // String[] spinnerCity = getExistCity();
 
         spinner_prefecture.setOnItemSelectedListener(this);
         spinner_city.setOnItemSelectedListener(this);
@@ -82,9 +109,6 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-
-
 
         mAdapter = new MyAdapter(spots);
         mRecyclerView.setAdapter(mAdapter);
@@ -119,29 +143,118 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
 
     public ArrayList<Spot> initSpots() {//ここで、本来はスポットの情報をサーバから得る
         Random random = new Random();
-        ArrayList<Spot> mspots = new ArrayList<Spot>();
-        
-        
-        for (int i = 0; i < 25; i++) {
-            Spot spot = null;
+        final ArrayList<Spot> mspots = new ArrayList<Spot>();
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://1ffd1c85.ngrok.io/api/spot/list/prefecture", null, new JsonHttpResponseHandler() {
 
-            switch (random.nextInt(2)) {
-                case 0:
-                    int images[] ={R.drawable.download_1};//画像の配列を受け取る
-                    spot = new Spot("美しい滝", images, "北海道の山奥にあります");
-                    break;
-                case 1:
-                    int images2[]= {R.drawable.download_2};
-                    spot = new Spot("綺麗な城", images2, "湖に浮いています");
-                    break;
-                case 2:
-                    break;
-                default:
-                    break;
+            @Override
+            public void onStart() {
+                // called before request is started
+                loadingDialog.show();
             }
-            
-            mspots.add(spot);
-        }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // called when response HTTP status is "200 OK"
+                String str = "";
+                try {
+                    JSONArray spot_ids = response.getJSONArray("spot_ids");
+                    for (int i = 0; i < spot_ids.length(); i++) {
+                        String url = "http://1ffd1c85.ngrok.io/api/spot/?" + spot_ids.getString(i);
+                        AsyncHttpClient clientI = new AsyncHttpClient();
+                        clientI.get(url, null, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                // called when response HTTP status is "200 OK"
+                                try {
+                                    Spot spot = new Spot();
+                                    spot.spotName = response.getString("spot_name");
+                                    spot.latitude = response.getDouble("latitude");
+                                    spot.longitude = response.getDouble("longitude");
+                                    spot.prefecture = response.getString("prefecture");
+                                    spot.city = response.getString("city");
+                                    spot.description = response.getString("desc");
+                                    spot.hint = response.getString("hint");
+                                    mspots.add(spot);
+                                } catch (JSONException e) {
+
+                                }
+                            }
+                        });
+
+                    }
+                } catch (JSONException e) {
+
+                }
+                Toast.makeText(getActivity(), "OK!", Toast.LENGTH_SHORT).show();
+                loadingDialog.hide();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Toast.makeText(getActivity(), "FAIL!", Toast.LENGTH_SHORT).show();
+                loadingDialog.hide();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Toast.makeText(getActivity(), "RETRY!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return mspots;
+    }
+
+    public ArrayList<String> getExistPrefecture(){
+        final ArrayList<String> retStrs = new ArrayList<String>();
+        final int[] size = new int[1]; //FIXME onSuccessから値を渡すための良くない方法
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://1ffd1c85.ngrok.io/api/spot/list/prefecture", null, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+                loadingDialog.show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // called when response HTTP status is "200 OK"
+                try {
+                    JSONArray prefectures = response.getJSONArray("prefectures");
+                    for (int i = 0; i < prefectures.length(); i++) {
+                        retStrs.add(prefectures.getString(i));
+                    }
+                } catch (JSONException e) {
+
+                }
+                Toast.makeText(getActivity(), retStrs.get(0), Toast.LENGTH_SHORT).show();
+                // あってる？
+                ArrayAdapter<String> preAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,
+                        retStrs);
+                preAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner_prefecture.setAdapter(preAdapter);
+
+                loadingDialog.hide();
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Toast.makeText(getActivity(), "FAIL!", Toast.LENGTH_SHORT).show();
+                loadingDialog.hide();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Toast.makeText(getActivity(), "RETRY!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return retStrs;
     }
 }

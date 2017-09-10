@@ -57,7 +57,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
     public void onBindViewHolder(ItemViewHolder holder, int position) {
 
         holder.mTextView.setText(spots.get(position).spotName);
-        //TODO holder.mImageView.setImageResource(spots.get(position).images[0]);
+        holder.mImageView.setImageBitmap(spots.get(position).imageBmp);
+        // holder.mImageView.setImageResource(R.drawable.download_1);
 
         /*final String data;
         data = mDataset.get(position);

@@ -10,7 +10,7 @@ public class Spot {
     String spotName;
     int userId;
     //int images[];
-    String imageUrl; // 配列は後回し
+    Bitmap imageBmp; // 配列は後回し
     double latitude;
     double longitude;
     String prefecture;

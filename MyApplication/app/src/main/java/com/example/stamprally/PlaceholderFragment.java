@@ -3,6 +3,9 @@ package com.example.stamprally;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Debug;
 import android.preference.PreferenceActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +31,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.StringTokenizer;
+import java.util.concurrent.CountDownLatch;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -53,6 +62,9 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<String> mDataset;
     private ArrayList<Spot> spots;
+    private String selectedPre;
+
+    private ArrayList<Spot> mSpots = new ArrayList<Spot>();
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -92,26 +104,18 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         initImage();//画像を表示する前に、読み込みを行う
-        spots = new ArrayList<Spot>();
-        spots = initSpots();
+        //spots = new ArrayList<Spot>();
+        initSpots();
 
         spinner_prefecture = (Spinner) rootView.findViewById(R.id.spinner);
         spinner_city = (Spinner) rootView.findViewById(R.id.spinner2);
 
-        ArrayList<String> spinnerPrefecture = getExistPrefecture();
+        ArrayList<String> spinnerPrefecture = getExistPrefecture(spinner_prefecture, null);
         //Toast.makeText(getActivity(), spinnerPrefecture.get(0), Toast.LENGTH_SHORT).show();
         // String[] spinnerCity = getExistCity();
 
         spinner_prefecture.setOnItemSelectedListener(this);
         spinner_city.setOnItemSelectedListener(this);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView1);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new MyAdapter(spots);
-        mRecyclerView.setAdapter(mAdapter);
 
         //textView.setText("こんにちは"+number);
 
@@ -143,11 +147,10 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-    public ArrayList<Spot> initSpots() {//ここで、本来はスポットの情報をサーバから得る
+    public void initSpots() {//ここで、本来はスポットの情報をサーバから得る
         Random random = new Random();
-        final ArrayList<Spot> mspots = new ArrayList<Spot>();
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://1ffd1c85.ngrok.io/api/spot/list/prefecture", null, new JsonHttpResponseHandler() {
+        client.get("http://1ffd1c85.ngrok.io/api/spot/list", null, new JsonHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -158,37 +161,48 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
-                String str = "";
+                //CountDownLatch latch = null;
                 try {
-                    JSONArray spot_ids = response.getJSONArray("spot_ids");
-                    for (int i = 0; i < spot_ids.length(); i++) {
-                        String url = "http://1ffd1c85.ngrok.io/api/spot/?" + spot_ids.getString(i);
-                        AsyncHttpClient clientI = new AsyncHttpClient();
-                        clientI.get(url, null, new JsonHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                // called when response HTTP status is "200 OK"
-                                try {
-                                    Spot spot = new Spot();
-                                    spot.spotName = response.getString("spot_name");
-                                    spot.latitude = response.getDouble("latitude");
-                                    spot.longitude = response.getDouble("longitude");
-                                    spot.prefecture = response.getString("prefecture");
-                                    spot.city = response.getString("city");
-                                    spot.description = response.getString("desc");
-                                    spot.hint = response.getString("hint");
-                                    mspots.add(spot);
-                                } catch (JSONException e) {
+                    JSONArray spots = response.getJSONArray("spots");
+                    //latch = new CountDownLatch(spots.length());
+                    for (int i = 0; i < spots.length(); i++) {
+                        JSONObject jsonSpot = spots.getJSONObject(i);
+                        Spot spot = new Spot();
+                        spot.spotName = jsonSpot.getString("spot_name");
+                        spot.latitude = jsonSpot.getDouble("latitude");
+                        spot.longitude = jsonSpot.getDouble("longitude");
+                        spot.prefecture = jsonSpot.getString("prefecture");
+                        spot.city = jsonSpot.getString("city");
+                        spot.description = jsonSpot.getString("description");
+                        spot.hint = jsonSpot.getString("hint");
 
-                                }
-                            }
-                        });
-
+                        JSONArray imageUrls = jsonSpot.getJSONArray("image_urls");
+                        String url = imageUrls.getString(0);
+                        //ImageGetTask task = new ImageGetTask(spot,latch);
+                        ImageGetTask task = new ImageGetTask(spot);
+                        task.execute(url);
+                        mSpots.add(spot);
                     }
                 } catch (JSONException e) {
-
+                    Log.e("!!!",e.getMessage());
                 }
-                Toast.makeText(getActivity(), "OK!", Toast.LENGTH_SHORT).show();
+
+//                try {
+//                    //task1とtask2の両方の処理が完了するまで待機
+//                    latch.await();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+                //Toast.makeText(getActivity(), mSpots.get(0).city, Toast.LENGTH_SHORT).show();
+                mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView1);
+                mRecyclerView.setHasFixedSize(true);
+                mLayoutManager = new LinearLayoutManager(getContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+
+                mAdapter = new MyAdapter(mSpots);
+                mRecyclerView.setAdapter(mAdapter);
+
                 loadingDialog.hide();
             }
 
@@ -205,15 +219,15 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 Toast.makeText(getActivity(), "RETRY!", Toast.LENGTH_SHORT).show();
             }
         });
-
-        return mspots;
     }
 
-    public ArrayList<String> getExistPrefecture(){
+    public ArrayList<String> getExistPrefecture(final Spinner spinner, final String prefecture){
         final ArrayList<String> retStrs = new ArrayList<String>();
         final int[] size = new int[1]; //FIXME onSuccessから値を渡すための良くない方法
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://1ffd1c85.ngrok.io/api/spot/list/prefecture", null, new JsonHttpResponseHandler() {
+        String url = "http://1ffd1c85.ngrok.io/api/spot/list/";
+        url += (prefecture != null) ? "city?prefecture=" + prefecture : "prefecture";
+        client.get(url, null, new JsonHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -225,19 +239,24 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 try {
-                    JSONArray prefectures = response.getJSONArray("prefectures");
+                    String attr = (prefecture != null) ? "cities" : "prefectures";
+                    JSONArray prefectures = response.getJSONArray(attr);
+                    selectedPre = prefectures.getString(0);
+                    if (prefecture == null) {
+                        ArrayList<String> spinnerCity = getExistPrefecture(spinner_city, selectedPre);
+                    }
                     for (int i = 0; i < prefectures.length(); i++) {
                         retStrs.add(prefectures.getString(i));
                     }
                 } catch (JSONException e) {
-
+                    Log.e("!!!",e.getMessage());
                 }
                 Toast.makeText(getActivity(), retStrs.get(0), Toast.LENGTH_SHORT).show();
                 // あってる？
-                ArrayAdapter<String> preAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,
+                ArrayAdapter<String> Adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,
                         retStrs);
-                preAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner_prefecture.setAdapter(preAdapter);
+                Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(Adapter);
 
                 loadingDialog.hide();
             }
@@ -246,7 +265,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Toast.makeText(getActivity(), "FAIL!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), prefecture+": FAIL!", Toast.LENGTH_SHORT).show();
                 loadingDialog.hide();
             }
 
@@ -258,5 +277,38 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         });
 
         return retStrs;
+    }
+
+    class ImageGetTask extends AsyncTask<String,Void,Bitmap> {
+        private CountDownLatch latch;
+        private Spot spot;
+
+        public ImageGetTask(Spot _spot) {
+            spot = _spot;
+            //latch = _latch;
+        }
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            Bitmap image;
+            try {
+                URL imageUrl = new URL(params[0]);
+                InputStream imageIs;
+                imageIs = imageUrl.openStream();
+                image = BitmapFactory.decodeStream(imageIs);
+                return image;
+            } catch (MalformedURLException e) {
+                return null;
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // 取得した画像をImageViewに設定します。
+            spot.imageBmp = result;
+            Log.d("????",""+spot.city);
+            mSpots.add(spot);
+            //latch.countDown();
+        }
     }
 }

@@ -49,6 +49,29 @@ def resize_image(image_data):
   return encoded
 
 
+def format_spot_data(spot):
+  # 画像の URL を準備
+  image_urls = []
+  for image_id in spot['image_ids']:
+    url = '{}/api/image?image_id={}'.format(ORIGIN, image_id)
+    image_urls.append(url)
+  formatted = {
+    'spot_id'    : spot['spot_id'],
+    'spot_name'  : spot['spot_name'],
+    'user_id'    : 1,
+    'image_urls' : image_urls,
+    'latitude'   : spot['latitude'],
+    'longitude'  : spot['longitude'],
+    'prefecture' : spot['prefecture'],
+    'city'       : spot['city'],
+    'description': spot['description'],
+    'hint'       : spot['hint'],
+    'favorites'  : spot['favorites'],
+    'created'    : spot['created'],
+    'modified'   : spot['modified']
+  }
+  return formatted
+
 def db_get_spot_prefecture_list():
   result = db.spot.find()
   prefecture_list = []
@@ -72,7 +95,7 @@ def db_get_spot_city_list(prefecture):
   return city_list
 
 
-def db_get_spot_list(prefecture=None, city=None):
+def db_get_spot_id_list(prefecture=None, city=None):
   query = {}
   if prefecture:
     query['prefecture'] = prefecture
@@ -137,9 +160,9 @@ def index():
 
 
 # debug
-@app.route('/<path:filename>')
-def debug(filename):
-  return app.send_from_directory(filename)
+@app.route('/<path:filepath>')
+def debug(filepath):
+  return flask.send_from_directory('./static/', filepath)
 # debug
 
 
@@ -165,14 +188,30 @@ def api_spot_list_city():
   return make_response(result)
 
 
+@app.route('/api/spot/list/id', methods=['GET'])
+def api_spot_list_id():
+  req = flask.request
+  prefecture = req.args.get('prefecture')
+  city       = req.args.get('city')
+  spot_ids   = db_get_spot_id_list(prefecture, city)
+  result = {
+    'spot_ids': spot_ids
+  }
+  return make_response(result)
+
+
 @app.route('/api/spot/list', methods=['GET'])
 def api_spot_list():
   req = flask.request
   prefecture = req.args.get('prefecture')
   city       = req.args.get('city')
-  spot_ids   = db_get_spot_list(prefecture, city)
+  spot_ids  = db_get_spot_id_list(prefecture, city)
+  spots = []
+  for spot_id in spot_ids:
+    spot = db_get_spot(spot_id)
+    spots.append(format_spot_data(spot))
   result = {
-    'spot_ids': spot_ids
+    'spots': spots
   }
   return make_response(result)
 
@@ -186,26 +225,7 @@ def api_spot():
   spot = db_get_spot(int(spot_id))
   if spot == None:
     flask.abort(404)
-  # 画像の URL を準備
-  image_urls = []
-  for image_id in spot['image_ids']:
-    url = '{}/api/image?image_id={}'.format(ORIGIN, image_id)
-    image_urls.append(url)
-  result = {
-    'spot_id'    : spot['spot_id'],
-    'spot_name'  : spot['spot_name'],
-    'user_id'    : 1,
-    'image_urls' : image_urls,
-    'latitude'   : spot['latitude'],
-    'longitude'  : spot['longitude'],
-    'prefecture' : spot['prefecture'],
-    'city'       : spot['city'],
-    'description': spot['description'],
-    'hint'       : spot['hint'],
-    'favorites'  : spot['favorites'],
-    'created'    : spot['created'],
-    'modified'   : spot['modified']
-  }
+  result = format_spot_data(spot)
   return make_response(result)
 
 

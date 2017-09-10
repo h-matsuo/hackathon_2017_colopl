@@ -72,6 +72,7 @@ def format_spot_data(spot):
   }
   return formatted
 
+
 def db_get_spot_prefecture_list():
   result = db.spot.find()
   prefecture_list = []
@@ -159,11 +160,9 @@ def index():
   return 'Hello, world!\nハッカソン＠せつでん村＠コロプラ株式会社\nDate: 9/9 -- 11'
 
 
-# debug
 @app.route('/<path:filepath>')
 def debug(filepath):
   return flask.send_from_directory('./static/', filepath)
-# debug
 
 
 @app.route('/api/spot/list/prefecture', methods=['GET'])

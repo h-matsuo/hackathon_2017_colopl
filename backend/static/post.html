@@ -105,6 +105,7 @@
 
     $('button#submit').on('click', function () {
       disableButton();
+      printStatus('スポットを投稿しています……', 'info');
       var form = {
         spot_name  : $('#spot_name'),
         image      : $('#image'),

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="array_prefecture">
+        <item>東京都</item>
+        <item>神奈川県</item>
+        <item>千葉県</item>
+        <item>埼玉県</item>
+        <item>茨城県</item>
+        <item>栃木県</item>
+        <item>群馬県</item>
+    </string-array>
+</resources>

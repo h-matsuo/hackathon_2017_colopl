@@ -41,5 +41,5 @@ $ mongodump -d hikyo -o <directory>
 リストアするには以下の通り：
 
 ```sh
-$ mongorestore -d hikyo <directory>
+$ mongorestore <directory>
 ```

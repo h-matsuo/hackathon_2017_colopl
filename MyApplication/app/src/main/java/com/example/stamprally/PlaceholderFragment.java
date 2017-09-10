@@ -104,6 +104,7 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         intent.setClassName("com.example.stamprally","com.example.stamprally.SpotDetailActivity");
         intent.putExtra("setuden.spotName", spots.get(position).spotName);
         intent.putExtra("setuden.userName","村人A");
+        intent.putExtra("setuden.images",spots.get(position).images);
         intent.putExtra("setuden.description",spots.get(position).description);
 
         startActivity(intent);

@@ -67,7 +67,6 @@ public  class PlaceholderFragment extends  Fragment implements AdapterView.OnIte
         TextView textView = (TextView) rootView.findViewById(R.id.textView1);
         int number = getArguments().getInt(ARG_SECTION_NUMBER);
 
-        initImage();//画像を表示する前に、読み込みを行う
         spots=new ArrayList<Spot>();
         spots = initSpots();
 

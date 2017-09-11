@@ -8,11 +8,14 @@ public class StampCard {
     String cardName;
     int num;
     int cardId[];
-
-    public StampCard(String cardName,int num,int cardId[]){
+    String description;
+    String userName;
+    public StampCard(String cardName,int num,int cardId[],String userName,String description){
         this.cardName=cardName;
         this.num=num;
         this.cardId=cardId;
+        this.description=description;
+        this.userName=userName;
     }
 
 }

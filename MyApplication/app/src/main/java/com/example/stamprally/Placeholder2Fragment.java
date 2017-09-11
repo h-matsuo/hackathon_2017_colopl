@@ -1,5 +1,6 @@
 package com.example.stamprally;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,7 +74,7 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView2.setLayoutManager(mLayoutManager);
 
-        mAdapter = new MyAdapter2(stampCards);
+        mAdapter = new MyAdapter2(stampCards,this);
         mRecyclerView2.setAdapter(mAdapter);
 
         return rootView;
@@ -100,10 +101,22 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
         for(int i=0;i<10;i++){
 
             int num=random.nextInt(5)+1;
-            StampCard stampCard=new StampCard("スタンプ",num,t);
+            StampCard stampCard=new StampCard("スタンプ",num,t,"村人B","山のスポットを集めました");
             stampCards.add(stampCard);
         }
         return stampCards;
+    }
+
+    public void changeActivity(int position){
+        Intent intent=new Intent();
+        intent.setClassName("com.example.stamprally","com.example.stamprally.CardDetailActivity");
+        intent.putExtra("setuden2.cardName", stampCards.get(position).cardName);
+        intent.putExtra("setuden2.userName","村人B");
+        intent.putExtra("setuden2.description",stampCards.get(position).description);
+        intent.putExtra("setuden2.num",stampCards.get(position).num);
+        intent.putExtra("setuden2.ids",stampCards.get(position).cardId);
+
+        startActivity(intent);
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.stamprally;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -63,12 +64,15 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<String> mDataset;
     private ArrayList<Spot> spots;
     private String selectedPre;
+    private boolean ok = false;
 
     private ArrayList<Spot> mSpots = new ArrayList<Spot>();
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     ProgressDialog loadingDialog;
+
+    private int remain;
 
     public PlaceholderFragment() {
 
@@ -103,12 +107,12 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         loadingDialog.setMessage("Loading...");
         loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        initImage();//画像を表示する前に、読み込みを行う
+        // initImage();//画像を表示する前に、読み込みを行う
         //spots = new ArrayList<Spot>();
-        initSpots();
-
         spinner_prefecture = (Spinner) rootView.findViewById(R.id.spinner);
         spinner_city = (Spinner) rootView.findViewById(R.id.spinner2);
+
+        initSpots();
 
         ArrayList<String> spinnerPrefecture = getExistPrefecture(spinner_prefecture, null);
         //Toast.makeText(getActivity(), spinnerPrefecture.get(0), Toast.LENGTH_SHORT).show();
@@ -116,14 +120,38 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
         spinner_prefecture.setOnItemSelectedListener(this);
         spinner_city.setOnItemSelectedListener(this);
-
         //textView.setText("こんにちは"+number);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView1);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        ArrayList<Spot> spos = new ArrayList<Spot>();
+        Spot spot = new Spot();
+        spot.city = "aa";
+        spos.add(spot);
+        spos.add(spot);
+        mAdapter = new MyAdapter(spos,this);
+        mRecyclerView.setAdapter(mAdapter);
 
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;
     }
 
-    
+    public void changeActivity(int position){
+        Intent intent=new Intent();
+        intent.setClassName("com.example.stamprally","com.example.stamprally.SpotDetailActivity");
+        intent.putExtra("setuden.spotName", spots.get(position).spotName);
+        intent.putExtra("setuden.userName","村人A");
+        //intent.putExtra("setuden.images",spots.get(position).images);
+        intent.putExtra("setuden.description",spots.get(position).description);
+
+        startActivity(intent);
+    }
+
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -143,9 +171,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-    public void initImage() {
 
-    }
 
     public void initSpots() {//ここで、本来はスポットの情報をサーバから得る
         Random random = new Random();
@@ -166,6 +192,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                     JSONArray spots = response.getJSONArray("spots");
                     //latch = new CountDownLatch(spots.length());
                     for (int i = 0; i < spots.length(); i++) {
+                        remain = spots.length();
                         JSONObject jsonSpot = spots.getJSONObject(i);
                         Spot spot = new Spot();
                         spot.spotName = jsonSpot.getString("spot_name");
@@ -181,7 +208,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                         //ImageGetTask task = new ImageGetTask(spot,latch);
                         ImageGetTask task = new ImageGetTask(spot);
                         task.execute(url);
-                        mSpots.add(spot);
+                        //mSpots.add(spot);
                     }
                 } catch (JSONException e) {
                     Log.e("!!!",e.getMessage());
@@ -194,16 +221,15 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 //                    e.printStackTrace();
 //                }
 
-                //Toast.makeText(getActivity(), mSpots.get(0).city, Toast.LENGTH_SHORT).show();
-                mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView1);
-                mRecyclerView.setHasFixedSize(true);
-                mLayoutManager = new LinearLayoutManager(getContext());
-                mRecyclerView.setLayoutManager(mLayoutManager);
+//                try {
+//                    Thread.sleep(3000);
+//                } catch (Exception e) {
+//
+//                }
 
-                mAdapter = new MyAdapter(mSpots);
-                mRecyclerView.setAdapter(mAdapter);
+                Log.d("?????", ""+mSpots.size());
 
-                loadingDialog.hide();
+                //Toast.makeText(getActivity(), mSpots.get(0).city, Toast.LENGTH_SHORT).show()
             }
 
             @Override
@@ -223,7 +249,6 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     public ArrayList<String> getExistPrefecture(final Spinner spinner, final String prefecture){
         final ArrayList<String> retStrs = new ArrayList<String>();
-        final int[] size = new int[1]; //FIXME onSuccessから値を渡すための良くない方法
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://1ffd1c85.ngrok.io/api/spot/list/";
         url += (prefecture != null) ? "city?prefecture=" + prefecture : "prefecture";
@@ -279,6 +304,15 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         return retStrs;
     }
 
+    public void setSpots() {
+        mAdapter = new MyAdapter(mSpots,this);
+        mRecyclerView.setAdapter(mAdapter);
+        Log.d("???","setSpots!");
+        ok = true;
+        loadingDialog.hide();
+
+    }
+
     class ImageGetTask extends AsyncTask<String,Void,Bitmap> {
         private CountDownLatch latch;
         private Spot spot;
@@ -307,7 +341,13 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             // 取得した画像をImageViewに設定します。
             spot.imageBmp = result;
             Log.d("????",""+spot.city);
+            remain--;
             mSpots.add(spot);
+            Log.d("???","size: "+mSpots.size());
+            Log.d("???","remain: "+remain);
+            if (remain == 0) {
+                setSpots();
+            }
             //latch.countDown();
         }
     }

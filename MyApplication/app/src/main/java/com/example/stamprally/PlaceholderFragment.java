@@ -127,6 +127,8 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        mSpots = new ArrayList<Spot>();
+
         ArrayList<Spot> spos = new ArrayList<Spot>();
         Spot spot = new Spot();
         spot.city = "aa";

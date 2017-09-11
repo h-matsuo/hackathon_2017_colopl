@@ -109,6 +109,14 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
 
     }
     public ArrayList<StampCard> initStampCard(){
+
+        String names[]={"富士山ラリー","箱根ラリー","秘境巡り"};
+
+        String persons[]={"村人A","箱根彦太郎","山田花子"};
+
+        String descriptions[]={"富士山の穴場をまとめました!","箱根の秘境を巡ってね","遭難には十分気をつけてください"};
+
+
         ArrayList<StampCard>stampCards=new ArrayList<StampCard>();
         Random random=new Random();
         int t[]=new int[10];
@@ -116,10 +124,10 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
             if(random.nextInt(2)==0)t[i]=R.drawable.download_3;
             else t[i]=R.drawable.download_4;
         }
-        for(int i=0;i<10;i++){
+        for(int i=0;i<3;i++){
 
             int num=random.nextInt(5)+1;
-            StampCard stampCard=new StampCard("スタンプ",num,t,"村人B","山のスポットを集めました");
+            StampCard stampCard=new StampCard(names[i],num,t,persons[i],descriptions[i]);
             stampCards.add(stampCard);
         }
         return stampCards;
@@ -128,9 +136,9 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
     public void changeActivity(int position){
         Intent intent=new Intent();
         intent.setClassName("com.example.stamprally","com.example.stamprally.CardDetailActivity");
-        intent.putExtra("setuden2.cardName", stampCards.get(position).cardName);
+        //ssintent.putExtra("setuden2.cardName", stampCards.get(position).cardName);
         intent.putExtra("setuden2.userName","村人B");
-        intent.putExtra("setuden2.description",stampCards.get(position).description);
+        //intent.putExtra("setuden2.description",stampCards.get(position).);
         intent.putExtra("setuden2.num",stampCards.get(position).num);
         intent.putExtra("setuden2.ids",stampCards.get(position).cardId);
 

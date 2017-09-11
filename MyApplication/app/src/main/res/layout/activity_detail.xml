@@ -4,6 +4,13 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/imageView55"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/back" />
+
+    <ImageView
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,6 +21,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+
+
+
 
     <TextView
         android:id="@+id/text_username2"
@@ -46,6 +57,8 @@
         android:textSize="25dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="134dp" />
+
+
 
     <ImageView
         android:id="@+id/imageView2_1"

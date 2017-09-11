@@ -145,7 +145,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
 
               intent.putExtra("setuden.spotName",mSpots.get(position).spotName);
-             intent.putExtra("setuden.images",mSpots.get(position).imageBmp);
+          //   intent.putExtra("setuden.images",mSpots.get(position).imageBmp);
             intent.putExtra("setuden.userName", "村人A");
 
 
@@ -192,10 +192,10 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 try {
                     JSONArray spots = response.getJSONArray("spots");
                     //latch = new CountDownLatch(spots.length());
-                    //for (int i = 0; i < spots.length(); i++) {
-                    for (int i = 0; i < 1; i++) { //FIXME
+                    for (int i = 0; i < spots.length(); i++) {
+                   // for (int i = 0; i < 1; i++) { //FIXME
                         remain = spots.length();
-                        remain = 1; //FIXME
+                        //remain = 1; //FIXME
                         JSONObject jsonSpot = spots.getJSONObject(i);
                         Spot spot = new Spot();
                         spot.spotName = jsonSpot.getString("spot_name");

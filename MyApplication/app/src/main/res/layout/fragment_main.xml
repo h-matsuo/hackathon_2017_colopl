@@ -20,7 +20,8 @@
         android:layout_alignRight="@+id/spinner2"
         android:layout_alignEnd="@+id/spinner2"
         android:layout_toRightOf="@+id/textView1"
-        android:layout_toEndOf="@+id/textView1" />
+        android:layout_toEndOf="@+id/textView1"
+        />
 
     <Spinner
         android:id="@+id/spinner2"
@@ -30,7 +31,8 @@
         android:layout_below="@+id/spinner"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="29dp" />
+        android:layout_marginTop="29dp"
+        />
 
     <TextView
         android:id="@+id/text_prefecture"

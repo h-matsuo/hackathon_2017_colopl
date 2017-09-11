@@ -16,6 +16,7 @@ public class CardDetailActivity extends Activity {
     ImageView mImageView[]=new ImageView[8];
     int ids[];
     int num;
+    ImageView backView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -32,7 +33,7 @@ public class CardDetailActivity extends Activity {
         mImageView[5]=findViewById(R.id.imageView2_6);
         mImageView[6]=findViewById(R.id.imageView2_7);
         mImageView[7]=findViewById(R.id.imageView2_8);
-
+        backView=findViewById(R.id.imageView55);
 
 
         initInformation();
@@ -42,8 +43,9 @@ public class CardDetailActivity extends Activity {
         textDescription.setText(description);
 
         for(int i=0;i<num;i++){
-            mImageView[i].setImageResource(ids[i]);
+            //mImageView[i].setImageResource(ids[i]);
         }
+        //backView.setIma
     }
 
     public void initInformation(){

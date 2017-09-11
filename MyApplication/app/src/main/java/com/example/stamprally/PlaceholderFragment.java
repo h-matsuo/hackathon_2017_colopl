@@ -132,25 +132,23 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         spot.city = "aa";
         spos.add(spot);
         spos.add(spot);
-        mAdapter = new MyAdapter(spos,this);
+        mAdapter = new MyAdapter(spos, this);
         mRecyclerView.setAdapter(mAdapter);
 
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;
     }
 
-    public void changeActivity(int position){
-        Intent intent=new Intent();
-        intent.setClassName("com.example.stamprally","com.example.stamprally.SpotDetailActivity");
+    public void changeActivity(int position) {
+        Intent intent = new Intent();
+        intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
         intent.putExtra("setuden.spotName", spots.get(position).spotName);
-        intent.putExtra("setuden.userName","村人A");
+        intent.putExtra("setuden.userName", "村人A");
         //intent.putExtra("setuden.images",spots.get(position).images);
-        intent.putExtra("setuden.description",spots.get(position).description);
+        intent.putExtra("setuden.description", spots.get(position).description);
 
         startActivity(intent);
     }
-
-
 
 
     @Override
@@ -170,7 +168,6 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
 
 
     public void initSpots() {//ここで、本来はスポットの情報をサーバから得る
@@ -211,7 +208,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                         //mSpots.add(spot);
                     }
                 } catch (JSONException e) {
-                    Log.e("!!!",e.getMessage());
+                    Log.e("!!!", e.getMessage());
                 }
 
 //                try {
@@ -227,7 +224,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 //
 //                }
 
-                Log.d("?????", ""+mSpots.size());
+                Log.d("?????", "" + mSpots.size());
 
                 //Toast.makeText(getActivity(), mSpots.get(0).city, Toast.LENGTH_SHORT).show()
             }
@@ -247,7 +244,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         });
     }
 
-    public ArrayList<String> getExistPrefecture(final Spinner spinner, final String prefecture){
+    public ArrayList<String> getExistPrefecture(final Spinner spinner, final String prefecture) {
         final ArrayList<String> retStrs = new ArrayList<String>();
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://1ffd1c85.ngrok.io/api/spot/list/";
@@ -274,11 +271,11 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                         retStrs.add(prefectures.getString(i));
                     }
                 } catch (JSONException e) {
-                    Log.e("!!!",e.getMessage());
+                    Log.e("!!!", e.getMessage());
                 }
                 Toast.makeText(getActivity(), retStrs.get(0), Toast.LENGTH_SHORT).show();
                 // あってる？
-                ArrayAdapter<String> Adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_spinner_dropdown_item,
+                ArrayAdapter<String> Adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
                         retStrs);
                 Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(Adapter);
@@ -290,7 +287,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Toast.makeText(getActivity(), prefecture+": FAIL!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), prefecture + ": FAIL!", Toast.LENGTH_SHORT).show();
                 loadingDialog.hide();
             }
 
@@ -305,15 +302,15 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
     }
 
     public void setSpots() {
-        mAdapter = new MyAdapter(mSpots,this);
+        mAdapter = new MyAdapter(mSpots, this);
         mRecyclerView.setAdapter(mAdapter);
-        Log.d("???","setSpots!");
+        Log.d("???", "setSpots!");
         ok = true;
         loadingDialog.hide();
 
     }
 
-    class ImageGetTask extends AsyncTask<String,Void,Bitmap> {
+    class ImageGetTask extends AsyncTask<String, Void, Bitmap> {
         private CountDownLatch latch;
         private Spot spot;
 
@@ -321,6 +318,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
             spot = _spot;
             //latch = _latch;
         }
+
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap image;
@@ -336,15 +334,16 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 return null;
             }
         }
+
         @Override
         protected void onPostExecute(Bitmap result) {
             // 取得した画像をImageViewに設定します。
             spot.imageBmp = result;
-            Log.d("????",""+spot.city);
+            Log.d("????", "" + spot.city);
             remain--;
             mSpots.add(spot);
-            Log.d("???","size: "+mSpots.size());
-            Log.d("???","remain: "+remain);
+            Log.d("???", "size: " + mSpots.size());
+            Log.d("???", "remain: " + remain);
             if (remain == 0) {
                 setSpots();
             }

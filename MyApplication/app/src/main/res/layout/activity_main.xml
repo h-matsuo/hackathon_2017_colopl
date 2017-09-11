@@ -8,6 +8,12 @@
     android:fitsSystemWindows="true"
     tools:context="com.example.stamprally.MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="599dp"
+        app:srcCompat="@drawable/back" />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -45,7 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:adjustViewBounds="false"
+        android:src="@drawable/plusbutton" />
 
     <!--
 The android gradle plugin version 2.3.0-beta1 is too old, please update to the latest version.

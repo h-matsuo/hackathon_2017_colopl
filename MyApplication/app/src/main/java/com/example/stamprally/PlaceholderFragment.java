@@ -283,7 +283,7 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(Adapter);
 
-                loadingDialog.hide();
+                //loadingDialog.hide();
             }
 
 

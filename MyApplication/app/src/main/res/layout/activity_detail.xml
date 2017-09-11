@@ -64,72 +64,41 @@
         android:id="@+id/imageView2_1"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/text_username2"
-        android:src="@drawable/download_1" />
+        android:src="@drawable/download_1"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignTop="@+id/imageView2_2"
+        android:layout_toLeftOf="@+id/text_description2"
+        android:layout_toStartOf="@+id/text_description2" />
 
     <ImageView
         android:id="@+id/imageView2_2"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:layout_below="@+id/text_username2"
-        android:layout_toEndOf="@+id/imageView2_1"
-        android:layout_toRightOf="@+id/imageView2_1"
-        android:src="@drawable/download_1" />
+        android:src="@drawable/download_1"
+        android:layout_alignTop="@+id/imageView2_3"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/imageView2_3"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:layout_alignTop="@+id/imageView2_2"
-        android:layout_toEndOf="@+id/imageView2_2"
-        android:layout_toRightOf="@+id/imageView2_2"
-        android:src="@drawable/download_1" />
-
-    <ImageView
-        android:id="@+id/imageView2_4"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_alignTop="@+id/imageView2_3"
-        android:layout_toEndOf="@+id/imageView2_3"
-        android:layout_toRightOf="@+id/imageView2_3"
-        android:src="@drawable/download_1" />
-
-    <ImageView
-        android:id="@+id/imageView2_5"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:src="@drawable/download_1"
         android:layout_centerVertical="true"
-        android:src="@drawable/download_1" />
+        android:layout_alignLeft="@+id/stamp"
+        android:layout_alignStart="@+id/stamp" />
 
     <ImageView
-        android:id="@+id/imageView2_6"
+        android:id="@+id/stamp"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:layout_alignTop="@+id/imageView2_5"
-        android:layout_toEndOf="@+id/imageView2_1"
-        android:layout_toRightOf="@+id/imageView2_1"
-        android:src="@drawable/download_1" />
+        android:src="@drawable/stamp"
+        android:layout_alignTop="@+id/imageView2_3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="26dp"
+        android:layout_marginEnd="26dp" />
 
-    <ImageView
-        android:id="@+id/imageView2_7"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_alignTop="@+id/imageView2_6"
-        android:layout_toEndOf="@+id/imageView2_2"
-        android:layout_toRightOf="@+id/imageView2_2"
-        android:src="@drawable/download_1" />
 
-    <ImageView
-        android:id="@+id/imageView2_8"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_alignTop="@+id/imageView2_7"
-        android:layout_toEndOf="@+id/imageView2_3"
-        android:layout_toRightOf="@+id/imageView2_3"
-        android:src="@drawable/download_1" />
 
 </RelativeLayout>

@@ -13,7 +13,7 @@ import android.widget.TextView;
 public class CardDetailActivity extends Activity {
     String cardName,userName,description;
     TextView textUserName,textDescription,textCardName;
-    ImageView mImageView[]=new ImageView[8];
+    ImageView mImageView[]=new ImageView[3];
     int ids[];
     int num;
     ImageView backView;
@@ -28,11 +28,6 @@ public class CardDetailActivity extends Activity {
         mImageView[0]=findViewById(R.id.imageView2_1);
         mImageView[1]=findViewById(R.id.imageView2_2);
         mImageView[2]=findViewById(R.id.imageView2_3);
-        mImageView[3]=findViewById(R.id.imageView2_4);
-        mImageView[4]=findViewById(R.id.imageView2_5);
-        mImageView[5]=findViewById(R.id.imageView2_6);
-        mImageView[6]=findViewById(R.id.imageView2_7);
-        mImageView[7]=findViewById(R.id.imageView2_8);
         backView=findViewById(R.id.imageView55);
 
 

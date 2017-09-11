@@ -2,6 +2,7 @@ package com.example.stamprally;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,7 +16,7 @@ public class SpotDetailActivity extends Activity {
     TextView textUserName,textDescription,textSpotName;
 
     String userName,description,spotName;
-    int[]images;
+    Bitmap image;
     ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class SpotDetailActivity extends Activity {
         textUserName.setText(userName);
         textSpotName.setText(spotName);
         textDescription.setText(description);
+        imageView.setImageBitmap(image);
 
     }
 
@@ -40,7 +42,7 @@ public class SpotDetailActivity extends Activity {
             spotName=intent.getStringExtra("setuden.spotName");
             userName=intent.getStringExtra("setuden.userName");
             description=intent.getStringExtra("setuden.description");
-            images=intent.getIntArrayExtra("setuden.images");
+            image=(Bitmap)intent.getParcelableExtra("setuden.images");
         }
     }
 }

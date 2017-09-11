@@ -45,6 +45,7 @@ import java.util.concurrent.CountDownLatch;
 import cz.msebera.android.httpclient.Header;
 
 import static android.R.attr.button;
+import static android.R.attr.repeatMode;
 import static com.example.stamprally.R.id.spinner;
 
 /**
@@ -141,11 +142,12 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     public void changeActivity(int position) {
         Intent intent = new Intent();
-        intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
-        intent.putExtra("setuden.spotName", spots.get(position).spotName);
-        intent.putExtra("setuden.userName", "村人A");
-        //intent.putExtra("setuden.images",spots.get(position).images);
-        intent.putExtra("setuden.description", spots.get(position).description);
+            intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
+
+              intent.putExtra("setuden.spotName",mSpots.get(position).spotName);
+            intent.putExtra("setuden.userName", "村人A");
+            //intent.putExtra("setuden.images",spots.get(position).images[0]);
+            intent.putExtra("setuden.description", "spots.get(position).description");
 
         startActivity(intent);
     }
@@ -188,8 +190,10 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 try {
                     JSONArray spots = response.getJSONArray("spots");
                     //latch = new CountDownLatch(spots.length());
-                    for (int i = 0; i < spots.length(); i++) {
+                    //for (int i = 0; i < spots.length(); i++) {
+                    for (int i = 0; i < 1; i++) { //FIXME
                         remain = spots.length();
+                        remain = 1; //FIXME
                         JSONObject jsonSpot = spots.getJSONObject(i);
                         Spot spot = new Spot();
                         spot.spotName = jsonSpot.getString("spot_name");

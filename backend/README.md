@@ -43,3 +43,5 @@ $ mongodump -d hikyo -o <directory>
 ```sh
 $ mongorestore <directory>
 ```
+
+本リポジトリの `backend/mongodb-dump` ディレクトリにテスト用データが入っている。

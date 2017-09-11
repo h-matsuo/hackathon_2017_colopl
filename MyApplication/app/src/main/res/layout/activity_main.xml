@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         app:srcCompat="@drawable/back_ha" />
-
+    
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -52,7 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:adjustViewBounds="false"
+        android:src="@drawable/plusbutton" />
 
     <!--
 The android gradle plugin version 2.3.0-beta1 is too old, please update to the latest version.

@@ -69,6 +69,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ItemViewHolder> {
         // holder.mImageView.setImageResource(R.drawable.download_1);
 
         /*final String data;
+
         data = mDataset.get(position);
         holder.mTextView.setText(mDataset.get(position));
         holder.mTextView.setOnClickListener(new View.OnClickListener() {

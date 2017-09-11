@@ -29,10 +29,16 @@ def make_response(data, headers=None):
 
 def reverse_geocoding(latitude, longitude):
   url = 'https://www.finds.jp/ws/rgeocode.php?json&lat={}&lon={}'.format(latitude, longitude)
+  prefecture = None
+  city       = None
   location = json.loads(urllib.request.urlopen(url).read())
-  prefecture = location['result']['prefecture']['pname']
-  city       = location['result']['municipality']['mname']
+  status     = int(location['status'])
+  if (status == 200 or status == 201 or status == 202):
+    status     = 200
+    prefecture = location['result']['prefecture']['pname']
+    city       = location['result']['municipality']['mname']
   return {
+    'status'    : status,
     'prefecture': prefecture,
     'city'      : city
   }
@@ -291,6 +297,8 @@ def api_spot_post():
   latitude  = float(params['latitude'])
   longitude = float(params['longitude'])
   location = reverse_geocoding(latitude, longitude)
+  if (location['status'] != 200):
+    flask.abort(location['status'])
   # 画像を DB に挿入し，それらの image_id を取得
   images = params['images']
   image_ids = []

@@ -101,7 +101,7 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
         for(int i=0;i<10;i++){
 
             int num=random.nextInt(5)+1;
-            StampCard stampCard=new StampCard("スタンプ",num,t,"村人B","山のスポットを集めました");
+            StampCard stampCard=new StampCard("スタンプラリーカード",num,t,"村人B","山のスポットを集めました");
             stampCards.add(stampCard);
         }
         return stampCards;

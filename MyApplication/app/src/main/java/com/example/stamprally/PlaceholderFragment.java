@@ -142,12 +142,14 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
 
     public void changeActivity(int position) {
         Intent intent = new Intent();
-            intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
+        intent.setClassName("com.example.stamprally", "com.example.stamprally.SpotDetailActivity");
 
               intent.putExtra("setuden.spotName",mSpots.get(position).spotName);
+             intent.putExtra("setuden.images",mSpots.get(position).imageBmp);
             intent.putExtra("setuden.userName", "村人A");
-            //intent.putExtra("setuden.images",spots.get(position).images[0]);
-            intent.putExtra("setuden.description", "spots.get(position).description");
+
+
+            intent.putExtra("setuden.description", mSpots.get(position).description);
 
         startActivity(intent);
     }

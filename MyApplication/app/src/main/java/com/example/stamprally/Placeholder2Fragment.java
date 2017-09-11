@@ -25,7 +25,8 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
     private RecyclerView mRecyclerView2;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    Spinner spinner_prefecture2, spinner_city2;
+    Spinner spinner_prefecture2, spinner_city2,spinner_difficult;
+    TextView textPrefecture,textCity,textDifficult;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -64,9 +65,11 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
 
         spinner_prefecture2 = (Spinner) rootView.findViewById(R.id.spinner3);
         spinner_city2 = (Spinner) rootView.findViewById(R.id.spinner4);
+        spinner_difficult=(Spinner)rootView.findViewById(R.id.spinner5);
 
         spinner_prefecture2.setOnItemSelectedListener(this);
         spinner_city2.setOnItemSelectedListener(this);
+        spinner_difficult.setOnItemSelectedListener(this);
 
         mRecyclerView2 = (RecyclerView) rootView.findViewById(R.id.recyclerView2);
         mRecyclerView2.setHasFixedSize(true);
@@ -77,17 +80,32 @@ public  class Placeholder2Fragment extends  Fragment implements AdapterView.OnIt
         mAdapter = new MyAdapter2(stampCards,this);
         mRecyclerView2.setAdapter(mAdapter);
 
+        textPrefecture=rootView.findViewById(R.id.textView2);
+        textCity=rootView.findViewById(R.id.textView4);
+        textDifficult=rootView.findViewById(R.id.textView5);
+
         return rootView;
     }
 
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String item = (String) adapterView.getSelectedItem();
 
+        if(adapterView.getId()==R.id.spinner3){
+            textPrefecture.setText(item);
+        }
+        else if(adapterView.getId()==R.id.spinner4){
+            textCity.setText(item);
+        }
+        else if(adapterView.getId()==R.id.spinner5){
+            textDifficult.setText(item);
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
 
     }
     public ArrayList<StampCard> initStampCard(){

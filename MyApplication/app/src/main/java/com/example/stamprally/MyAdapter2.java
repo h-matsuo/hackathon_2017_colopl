@@ -39,11 +39,6 @@ public class MyAdapter2     extends RecyclerView.Adapter<MyAdapter2.ItemViewHold
             mImageView[0]=(ImageView)v.findViewById(R.id.image1);
             mImageView[1]=(ImageView)v.findViewById(R.id.image2);
             mImageView[2]=(ImageView)v.findViewById(R.id.image3);
-            mImageView[3]=(ImageView)v.findViewById(R.id.image4);
-            mImageView[4]=(ImageView)v.findViewById(R.id.image5);
-            mImageView[5]=(ImageView)v.findViewById(R.id.image6);
-            mImageView[6]=(ImageView)v.findViewById(R.id.image7);
-            mImageView[7]=(ImageView)v.findViewById(R.id.image8);
         }
     }
 
@@ -72,9 +67,11 @@ public class MyAdapter2     extends RecyclerView.Adapter<MyAdapter2.ItemViewHold
         holder.mTextView.setText(stampCards.get(position).cardName);
 
         for(int i=0;i<stampCards.get(position).num;i++){//スタンプの数だけ画像を設定
-            Bitmap bitmap =((BitmapDrawable)holder.mImageView[i].getDrawable()).getBitmap();
-
-        holder.mImageView[i].setImageResource(stampCards.get(position).cardId[i]);
+            if (holder.mImageView[i] == null) {
+                break;
+            }
+            Bitmap bitmap = ((BitmapDrawable) holder.mImageView[i].getDrawable()).getBitmap();
+            holder.mImageView[i].setImageResource(stampCards.get(position).cardId[i]);
         }
 
 

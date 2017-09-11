@@ -115,8 +115,8 @@ public class PostSpotActivity extends AppCompatActivity implements LocationListe
         location = locationManager.getLastKnownLocation(locationProvider);
 
         if (location != null) {
-            TextView textView = (TextView) findViewById(R.id.tv_location);
-            textView.setText(String.valueOf( "onCreate() : " + location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
+            //TextView textView = (TextView) findViewById(R.id.tv_location);
+            //textView.setText(String.valueOf( "onCreate() : " + location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
         }
         /*-----------*/
 

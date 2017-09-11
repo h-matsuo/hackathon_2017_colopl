@@ -113,6 +113,8 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         spinner_prefecture = (Spinner) rootView.findViewById(R.id.spinner);
         spinner_city = (Spinner) rootView.findViewById(R.id.spinner2);
 
+        mSpots = new ArrayList<Spot>();
+
         initSpots();
 
         ArrayList<String> spinnerPrefecture = getExistPrefecture(spinner_prefecture, null);
@@ -135,7 +137,6 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
         spos.add(spot);
         mAdapter = new MyAdapter(spos, this);
         mRecyclerView.setAdapter(mAdapter);
-
         //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         return rootView;
     }
@@ -279,11 +280,10 @@ public  class PlaceholderFragment extends Fragment implements AdapterView.OnItem
                 } catch (JSONException e) {
                     Log.e("!!!", e.getMessage());
                 }
-                Toast.makeText(getActivity(), retStrs.get(0), Toast.LENGTH_SHORT).show();
                 // あってる？
                 ArrayAdapter<String> Adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,
                         retStrs);
-                Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(Adapter);
 
                 //loadingDialog.hide();

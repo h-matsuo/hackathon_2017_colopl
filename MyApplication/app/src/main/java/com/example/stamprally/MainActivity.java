@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -73,32 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        /*
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView1);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mDataset = new ArrayList<>();
-        mDataset.add("A");
-        mDataset.add("B");
-        mDataset.add("C");
-        mDataset.add("D");
-        mDataset.add("E");
-        mDataset.add("F");
-        mDataset.add("G");
-        mDataset.add("H");
-        mDataset.add("J");
-        mDataset.add("K");
-        mDataset.add("L");
-        mDataset.add("M");
-        mDataset.add("N");
-        mDataset.add("O");
-        mDataset.add("P");
-
-        //mAdapter = new MyAdapter(mDataset);
-        //mRecyclerView.setAdapter(mAdapter);
-        */
     }
 
 
@@ -149,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
                     return PlaceholderFragment.newInstance(0);
                 case 1:
                     return Placeholder2Fragment.newInstance(1);
-                case 2:
-                    return Placeholder3Fragment.newInstance(0);
+//                case 2:
+//                    return Placeholder3Fragment.newInstance(0);
             }
             return PlaceholderFragment.newInstance(0);
         }
@@ -158,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 2;
         }
 
         @Override
@@ -168,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
                     return "スポット";
                 case 1:
                     return "スタンプカード";
-                case 2:
-                    return "挑戦中スタンプカード";
+//                case 2:
+//                    return "挑戦中スタンプカード";
             }
             return null;
         }

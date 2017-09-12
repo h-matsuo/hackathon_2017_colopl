@@ -1,6 +1,6 @@
 # Setup (for macOS)
 
-1. Python3 インストール
+1. Python 3 インストール
 
     ```sh
     $ brew install python3
@@ -44,4 +44,14 @@ $ mongodump -d hikyo -o <directory>
 $ mongorestore <directory>
 ```
 
-本リポジトリの `backend/mongodb-dump` ディレクトリにテスト用データが入っている。
+なお，本リポジトリの `backend/mongodb-dump` ディレクトリにはテスト用データが入っている。  
+必要に応じてリストアすること。
+
+* `backend/mongodb-dump/demo`
+    - プレゼンのデモ時に使用したデータ
+    - 地方の面白いスポットを 4 件登録
+    - スタンプカードは空
+
+* `backend/mongodb-dump/sample`
+    - 実環境を想定したデータ
+    - スポット，スタンプ共にそこそこの数を登録
